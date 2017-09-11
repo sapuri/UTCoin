@@ -1,7 +1,7 @@
-// Import the page's CSS. Webpack will know what to do with it.
+// Import the page's CSS
 import "../stylesheets/app.css";
 
-// Import libraries we need.
+// Import libraries
 import { default as Web3 } from 'web3';
 import { default as contract } from 'truffle-contract'
 
@@ -9,23 +9,20 @@ import { default as contract } from 'truffle-contract'
 import UTCoin_artifacts from '../../build/contracts/UTCoin.json'
 
 // UTCoin is our usable abstraction, which we'll use through the code below.
-var UTCoin = contract(UTCoin_artifacts);
+const UTCoin = contract(UTCoin_artifacts);
 
-// The following code is simple to show off interacting with your contracts.
-// As your needs grow you will likely need to change its form and structure.
-// For application bootstrapping, check out window.addEventListener below.
-var accounts;
-var account;
+let accounts;
+let account;
 
 window.App = {
   start: function() {
-    var self = this;
+    const self = this;
 
     // Bootstrap the UTCoin abstraction for Use.
     UTCoin.setProvider(web3.currentProvider);
 
     // Get the initial account balance so it can be displayed.
-    web3.eth.getAccounts(function(err, accs) {
+    web3.eth.getAccounts((err, accs) => {
       if (err != null) {
         alert("There was an error fetching your accounts.");
         return;
@@ -55,47 +52,46 @@ window.App = {
   },
 
   setStatus: function(message) {
-    var status = document.getElementById("status");
+    console.info('setStatus()');
+    const status = document.getElementById("status");
     status.innerHTML = message;
   },
 
   refreshBalance: function() {
-    var self = this;
+    console.info('refreshBalance()');
+    const self = this;
 
-    var meta;
-    UTCoin.deployed().then(function(instance) {
-      meta = instance;
-      return meta.getBalance.call(account, {from: account});
-    }).then(function(value) {
-      var balance_element = document.getElementById("balance");
+    UTCoin.deployed().then(instance => {
+      return instance.getBalance.call(account, {from: account});
+    }).then(value => {
+      const balance_element = document.getElementById("balance");
       balance_element.innerHTML = value.valueOf();
-    }).catch(function(e) {
+    }).catch(e => {
       console.log(e);
       self.setStatus("Error getting balance; see log.");
     });
   },
 
   sendCoin: function() {
-    var self = this;
+    console.info('sendCoin()');
+    const self = this;
 
-    var amount = parseInt(document.getElementById("amount").value);
-    var sender = document.getElementById("sender").value;
-    var receiver = document.getElementById("receiver").value;
+    const amount = parseInt(document.getElementById("amount").value);
+    const sender = document.getElementById("sender").value;
+    const receiver = document.getElementById("receiver").value;
 
-    let loader = document.getElementById("send-coin-form").getElementsByClassName("loader")[0];
+    const loader = document.getElementById("send-coin-form").getElementsByClassName("loader")[0];
     loader.classList.add("is-active");
     this.setStatus("Initiating transaction... (please wait)");
 
-    var meta;
-    UTCoin.deployed().then(function(instance) {
-      meta = instance;
-      console.log('Contract:', meta);
-      return meta.sendCoin(receiver, amount, {from: sender});
-    }).then(function() {
+    UTCoin.deployed().then(instance => {
+      console.log('Contract:', instance);
+      return instance.sendCoin(receiver, amount, {from: sender});
+    }).then(() => {
       loader.classList.remove("is-active");
       self.setStatus("Transaction complete!");
       self.refreshBalance();
-    }).catch(function(e) {
+    }).catch(e => {
       loader.classList.remove("is-active");
       console.log(e);
       self.setStatus("Error sending coin; see log.");
@@ -103,6 +99,7 @@ window.App = {
   },
 
   catchEvents: function() {
+    console.info('catchEvents()');
     UTCoin.deployed().then(instance => {
       const transfers = instance.Transfer({fromBlock: 'latest'});
       transfers.watch((error, result) => {
@@ -116,7 +113,7 @@ window.App = {
   }
 };
 
-window.addEventListener('load', function() {
+window.addEventListener('load', () => {
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
   if (typeof web3 !== 'undefined') {
     console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 UTCoin, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
