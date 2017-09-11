@@ -4,24 +4,45 @@ import "./ConvertLib.sol";
 
 contract UTCoin {
     uint256 public totalSupply = 10000; // トークンの総量
-
-    // EVM上にstorage領域を定義。key => value になっていて address: uint 型で array balances を作る。
+    address public owner; // オーナーアドレス
     mapping (address => uint) balances; // 各アドレスの残高
+    mapping (address => bool) public blacklist; // ブラックリスト
 
-    /**
-     * イベント通知
-     * Transfer eventlog を定義
-     * @param _from 受信アドレス
-     * @param _to 送信アドレス
-     * @param _value 送金額
-     */
-    event Transfer(address indexed _from, address indexed _to, uint256 _value);
+    // オーナーアドレスからのみ実行可能
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    // イベント通知
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Blacklisted(address indexed target);
+    event DeleteFromBlacklist(address indexed target);
 
     /**
      * コンストラクタ
      */
     function UTCoin() {
         balances[tx.origin] = totalSupply;
+        owner = msg.sender;
+    }
+
+    /**
+     * アドレスをブラックリストに登録
+     * @param addr 対象のアドレス
+     */
+    function blacklisting(address addr) onlyOwner {
+        blacklist[addr] = true;
+        Blacklisted(addr);
+    }
+
+    /**
+     * アドレスをブラックリストから削除
+     * @param addr 対象のアドレス
+     */
+    function deleteFromBlacklist(address addr) onlyOwner {
+        blacklist[addr] = false;
+        DeleteFromBlacklist(addr);
     }
 
     /**
@@ -32,8 +53,12 @@ contract UTCoin {
      */
     function sendCoin(address receiver, uint amount) returns(bool sufficient) {
         // 不正送金チェック
-        if (balances[msg.sender] < amount) throw;
-        if (balances[receiver] + amount < balances[receiver]) throw;
+        require(balances[msg.sender] >= amount);
+        require(balances[receiver] + amount >= balances[receiver]);
+
+        // ブラックリストチェック
+        require(blacklist[msg.sender] == false);
+        require(blacklist[receiver] == false);
 
         // 送信アドレスと受信アドレスの残高を更新
         balances[msg.sender] -= amount;
