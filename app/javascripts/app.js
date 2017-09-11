@@ -45,10 +45,10 @@ window.App = {
 
       const eth_balance = web3.fromWei(web3.eth.getBalance(account).toString(), 'ether');
       console.log('eth_balance:', eth_balance, 'ETH');
-
-      // Catching events
-      self.catchEvents();
     });
+
+    // Catching events
+    self.catchEvents();
   },
 
   setStatus: function(message) {
