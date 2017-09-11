@@ -1,18 +1,12 @@
 pragma solidity ^0.4.4;
 
+import "./Owned.sol";
 import "./ConvertLib.sol";
 
-contract UTCoin {
+contract UTCoin is Owned {
     uint256 public totalSupply = 10000; // トークンの総量
-    address public owner; // オーナーアドレス
     mapping (address => uint) balances; // 各アドレスの残高
     mapping (address => bool) public blacklist; // ブラックリスト
-
-    // オーナーアドレスからのみ実行可能
-    modifier onlyOwner() {
-        require(msg.sender == owner);
-        _;
-    }
 
     // イベント通知
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -23,8 +17,7 @@ contract UTCoin {
      * コンストラクタ
      */
     function UTCoin() {
-        balances[tx.origin] = totalSupply;
-        owner = msg.sender;
+        balances[msg.sender] = totalSupply;
     }
 
     /**
