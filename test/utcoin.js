@@ -1,13 +1,15 @@
 var UTCoin = artifacts.require("./UTCoin.sol");
 
 contract('UTCoin', function(accounts) {
-  it("should put 10000 UTCoin in the first account", function() {
+  const totalSupply = 10000;
+  it(`should put ${totalSupply} UTCoin in the first account`, function() {
     return UTCoin.deployed().then(function(instance) {
       return instance.getBalance.call(accounts[0]);
     }).then(function(balance) {
-      assert.equal(balance.valueOf(), 10000, "10000 wasn't in the first account");
+      assert.equal(balance.valueOf(), totalSupply, `${totalSupply} wasn't in the first account`);
     });
   });
+
   it("should call a function that depends on a linked library", function() {
     var meta;
     var UTCoinBalance;
