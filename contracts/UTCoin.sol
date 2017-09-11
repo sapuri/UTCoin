@@ -9,6 +9,7 @@ contract UTCoin {
     mapping (address => uint) balances; // 各アドレスの残高
 
     /**
+     * イベント通知
      * Transfer eventlog を定義
      * @param _from 受信アドレス
      * @param _to 送信アドレス
@@ -31,8 +32,8 @@ contract UTCoin {
      */
     function sendCoin(address receiver, uint amount) returns(bool sufficient) {
         // 不正送金チェック
-        if (balances[msg.sender] < amount) return false;
-        if (balances[receiver] + amount < balances[receiver]) return false;
+        if (balances[msg.sender] < amount) throw;
+        if (balances[receiver] + amount < balances[receiver]) throw;
 
         // 送信アドレスと受信アドレスの残高を更新
         balances[msg.sender] -= amount;
