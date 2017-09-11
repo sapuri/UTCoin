@@ -46,8 +46,11 @@ window.App = {
 
       self.refreshBalance();
 
-      const eth_balance = web3.fromWei(web3.eth.getBalance(account).toString(), "ether");
+      const eth_balance = web3.fromWei(web3.eth.getBalance(account).toString(), 'ether');
       console.log('eth_balance:', eth_balance, 'ETH');
+
+      // Catching events
+      self.catchEvents();
     });
   },
 
@@ -86,6 +89,7 @@ window.App = {
     var meta;
     UTCoin.deployed().then(function(instance) {
       meta = instance;
+      console.log('Contract:', meta);
       return meta.sendCoin(receiver, amount, {from: sender});
     }).then(function() {
       loader.classList.remove("is-active");
@@ -95,6 +99,19 @@ window.App = {
       loader.classList.remove("is-active");
       console.log(e);
       self.setStatus("Error sending coin; see log.");
+    });
+  },
+
+  catchEvents: function() {
+    UTCoin.deployed().then(instance => {
+      const transfers = instance.Transfer({fromBlock: 'latest'});
+      transfers.watch((error, result) => {
+        if (error == null) {
+          console.log('Transfer:', result.args);
+        }
+      });
+    }).catch(e => {
+      console.log(e);
     });
   }
 };
