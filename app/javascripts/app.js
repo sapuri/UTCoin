@@ -36,10 +36,9 @@ window.App = {
       accounts = accs;
       account = accounts[0];
       console.log('accounts:', accounts);
-      console.log('account:', account);
 
-      let my_address = document.getElementById("my-address");
-      my_address.innerHTML = account;
+      let current_address = document.getElementById("current-address");
+      current_address.innerHTML = account;
 
       self.refreshBalance();
 
