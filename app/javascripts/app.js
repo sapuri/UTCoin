@@ -3,10 +3,10 @@ import "../stylesheets/app.css";
 
 // Import libraries
 import { default as Web3 } from 'web3';
-import { default as contract } from 'truffle-contract'
+import { default as contract } from 'truffle-contract';
 
 // Import our contract artifacts and turn them into usable abstractions.
-import UTCoin_artifacts from '../../build/contracts/UTCoin.json'
+import UTCoin_artifacts from '../../build/contracts/UTCoin.json';
 
 // UTCoin is our usable abstraction, which we'll use through the code below.
 const UTCoin = contract(UTCoin_artifacts);
@@ -41,9 +41,6 @@ window.App = {
       current_address.innerHTML = account;
 
       self.refreshBalance();
-
-      const eth_balance = web3.fromWei(web3.eth.getBalance(account).toString(), 'ether');
-      console.log('eth_balance:', eth_balance, 'ETH');
     });
 
     // Catching events
@@ -61,7 +58,7 @@ window.App = {
     const self = this;
 
     UTCoin.deployed().then(instance => {
-      return instance.getBalance.call(account, {from: account});
+      return instance.balanceOf.call(account);
     }).then(value => {
       const balance_element = document.getElementById("balance");
       balance_element.innerHTML = value.valueOf();
@@ -83,18 +80,21 @@ window.App = {
     loader.classList.add("is-active");
     this.setStatus("Initiating transaction... (please wait)");
 
-    UTCoin.deployed().then(instance => {
-      console.log('Contract:', instance);
-      return instance.sendCoin(receiver, amount, {from: sender});
-    }).then(() => {
-      loader.classList.remove("is-active");
-      self.setStatus("Transaction complete!");
-      self.refreshBalance();
-    }).catch(e => {
-      loader.classList.remove("is-active");
-      console.log(e);
-      self.setStatus("Error sending coin; see log.");
-    });
+    UTCoin.deployed()
+      .then(instance => {
+        console.log('Contract:', instance);
+        return instance.transfer(receiver, amount, {from: sender});
+      })
+      .then(() => {
+        loader.classList.remove("is-active");
+        self.setStatus("Transaction complete!");
+        self.refreshBalance();
+      })
+      .catch(e => {
+        loader.classList.remove("is-active");
+        console.log(e);
+        self.setStatus("Error sending coin; see log.");
+      });
   },
 
   catchEvents: function() {
