@@ -1,84 +1,129 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.11;
 
-import "./Owned.sol";
-import "./ConvertLib.sol";
+import "./ERC20Interface.sol";
 
-contract UTCoin is Owned {
-    uint256 public totalSupply = 10000; // トークンの総量
-    mapping (address => uint) balances; // 各アドレスの残高
-    mapping (address => bool) public blacklist; // ブラックリスト
+contract UTCoin is ERC20Interface {
+    string public constant symbol = "UTC";
+    string public constant name = "UTCoin";
+    uint8 public constant decimals = 18;
+    uint256 _totalSupply = 1000000;
 
-    // イベント通知
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Blacklisted(address indexed target);
-    event DeleteFromBlacklist(address indexed target);
+    // Owner of this contract
+    address public owner;
 
-    /**
-     * コンストラクタ
-     */
+    // Balances for each account
+    mapping(address => uint256) balances;
+
+    // Owner of account approves the transfer of an amount to another account
+    mapping(address => mapping (address => uint256)) allowed;
+
+    // Blacklist
+    mapping (address => bool) public blacklist;
+
+    // Events
+    event TransferOwnership(address _old_addr, address _new_addr);
+    event Blacklisted(address indexed _target);
+    event DeleteFromBlacklist(address indexed _target);
+
+    // Functions with this modifier can only be executed by the owner
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    // Constructor
     function UTCoin() {
-        balances[msg.sender] = totalSupply;
+        owner = msg.sender;
+        balances[owner] = _totalSupply;
+    }
+
+    function totalSupply() constant returns (uint256 totalSupply) {
+        totalSupply = _totalSupply;
+    }
+
+    // What is the balance of a particular account?
+    function balanceOf(address _owner) constant returns (uint256 balance) {
+        return balances[_owner];
+    }
+
+    // Transfer the balance from owner's account to another account
+    function transfer(address _to, uint256 _amount) returns (bool success) {
+        require(blacklist[msg.sender] == false);
+        require(blacklist[_to] == false);
+
+        if (balances[msg.sender] >= _amount
+            && _amount > 0
+            && balances[_to] + _amount > balances[_to]) {
+            balances[msg.sender] -= _amount;
+            balances[_to] += _amount;
+            Transfer(msg.sender, _to, _amount);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Send _value amount of tokens from address _from to address _to
+    // The transferFrom method is used for a withdraw workflow, allowing contracts to send
+    // tokens on your behalf, for example to "deposit" to a contract address and/or to charge
+    // fees in sub-currencies; the command should fail unless the _from account has
+    // deliberately authorized the sender of the message via some mechanism; we propose
+    // these standardized APIs for approval:
+    function transferFrom(address _from, address _to, uint256 _amount) returns (bool success) {
+        require(blacklist[_from] == false);
+        require(blacklist[_to] == false);
+
+        if (balances[_from] >= _amount
+            && allowed[_from][msg.sender] >= _amount
+            && _amount > 0
+            && balances[_to] + _amount > balances[_to]) {
+            balances[_from] -= _amount;
+            allowed[_from][msg.sender] -= _amount;
+            balances[_to] += _amount;
+            Transfer(_from, _to, _amount);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Allow _spender to withdraw from your account, multiple times, up to the _value amount.
+    // If this function is called again it overwrites the current allowance with _value.
+    function approve(address _spender, uint256 _amount) returns (bool success) {
+        allowed[msg.sender][_spender] = _amount;
+        Approval(msg.sender, _spender, _amount);
+        return true;
+    }
+
+    function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
+        return allowed[_owner][_spender];
     }
 
     /**
      * アドレスをブラックリストに登録
-     * @param addr 対象のアドレス
+     * @param _addr 対象のアドレス
      */
-    function blacklisting(address addr) onlyOwner {
-        blacklist[addr] = true;
-        Blacklisted(addr);
+    function blacklisting(address _addr) onlyOwner {
+        blacklist[_addr] = true;
+        Blacklisted(_addr);
     }
 
     /**
      * アドレスをブラックリストから削除
-     * @param addr 対象のアドレス
+     * @param _addr 対象のアドレス
      */
-    function deleteFromBlacklist(address addr) onlyOwner {
-        blacklist[addr] = false;
-        DeleteFromBlacklist(addr);
+    function deleteFromBlacklist(address _addr) onlyOwner {
+        blacklist[_addr] = false;
+        DeleteFromBlacklist(_addr);
     }
 
     /**
-     * 送金
-     * @param receiver 受信アドレス
-     * @param amount 送金量
-     * @return sufficient
+     * オーナーを移転
+     * @param _new_addr 移転先のアドレス
      */
-    function sendCoin(address receiver, uint amount) returns(bool sufficient) {
-        // 不正送金チェック
-        require(balances[msg.sender] >= amount);
-        require(balances[receiver] + amount >= balances[receiver]);
-
-        // ブラックリストチェック
-        require(blacklist[msg.sender] == false);
-        require(blacklist[receiver] == false);
-
-        // 送信アドレスと受信アドレスの残高を更新
-        balances[msg.sender] -= amount;
-        balances[receiver] += amount;
-
-        // イベント通知
-        Transfer(msg.sender, receiver, amount);
-
-        return true;
-    }
-
-    /**
-     * ETH balance を返す
-     * address の持っている UTCoin balance を2倍にして返す。この時 ConvertLib contract が呼ばれる。
-     * @param addr アドレス
-     * @return ETH balance
-     */
-    function getBalanceInEth(address addr) returns(uint){
-        return ConvertLib.convert(getBalance(addr),2);
-    }
-
-    /**
-     * UTCoin balance を返す
-     * @param addr アドレス
-     * @return UTCoin balance
-     */
-    function getBalance(address addr) returns(uint) {
-        return balances[addr];
+    function transferOwnership(address _new_addr) onlyOwner {
+        address old_addr = owner;
+        owner = _new_addr;
+        TransferOwnership(old_addr, owner);
     }
 }
