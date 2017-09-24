@@ -99,28 +99,19 @@ contract UTCoin is ERC20Interface {
         return allowed[_owner][_spender];
     }
 
-    /**
-     * アドレスをブラックリストに登録
-     * @param _addr 対象のアドレス
-     */
+    // Add address _addr to blacklist
     function blacklisting(address _addr) onlyOwner {
         blacklist[_addr] = true;
         Blacklisted(_addr);
     }
 
-    /**
-     * アドレスをブラックリストから削除
-     * @param _addr 対象のアドレス
-     */
+    // Remove address _addr from blacklist
     function deleteFromBlacklist(address _addr) onlyOwner {
         blacklist[_addr] = false;
         DeleteFromBlacklist(_addr);
     }
 
-    /**
-     * オーナーを移転
-     * @param _new_addr 移転先のアドレス
-     */
+    // Transfer ownership to address _new_addr
     function transferOwnership(address _new_addr) onlyOwner {
         address old_addr = owner;
         owner = _new_addr;
