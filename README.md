@@ -1,29 +1,10 @@
-# truffle-init-webpack
-Example webpack project with Truffle. Includes contracts, migrations, tests, user interface and webpack build pipeline.
+# UTCoin (東大コイン)
+Ethereum based Cryptocurrency conforming to ERC20 token standard
 
-## Usage
+We are planning to conduct cryptocurrency operation experiment in the University of Tokyo campus using this token.
 
-To initialize a project with this example, run `truffle init webpack` inside an empty directory.
+## Available at Ropsten Testnet
+Address: 0x9bab3c293ca109de331069addced28380c5cc6fc
 
-## Building and the frontend
-
-1. First run `truffle compile`, then run `truffle migrate` to deploy the contracts onto your network of choice (default "development").
-1. Then run `npm run dev` to build the app and serve it on http://localhost:8080
-
-## Possible upgrades
-
-* Use the webpack hotloader to sense when contracts or javascript have been recompiled and rebuild the application. Contributions welcome!
-
-## Common Errors
-
-* **Error: Can't resolve '../build/contracts/UTCoin.json'**
-
-This means you haven't compiled or migrated your contracts yet. Run `truffle compile` and `truffle migrate` first.
-
-Full error:
-
-```
-ERROR in ./app/main.js
-Module not found: Error: Can't resolve '../build/contracts/UTCoin.json' in '/Users/tim/Documents/workspace/Consensys/test3/app'
- @ ./app/main.js 11:16-59
-```
+You can see token information at Etherscan.
+https://ropsten.etherscan.io/token/0x9bab3c293ca109de331069addced28380c5cc6fc
