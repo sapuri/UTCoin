@@ -5,8 +5,8 @@ import "./ERC20Interface.sol";
 contract UTCoin is ERC20Interface {
     string public constant symbol = "UTC";
     string public constant name = "UTCoin";
-    uint8 public constant decimals = 18;
-    uint256 _totalSupply = 1000000;
+    uint8 public constant decimals = 3;
+    uint256 _totalSupply = 1000000000; // 1,000,000 x 1000 (include decimals)
 
     // Owner of this contract
     address public owner;
