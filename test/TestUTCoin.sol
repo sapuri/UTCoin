@@ -9,9 +9,9 @@ contract TestUTCoin {
   function testInitialBalanceUsingDeployedContract() {
     UTCoin utcoin = UTCoin(DeployedAddresses.UTCoin());
 
-    uint expected = 1000000;
+    uint expected = 1000000000;
 
-    Assert.equal(utcoin.balanceOf(msg.sender), expected, "Owner should have 1000000 UTCoin initially");
+    Assert.equal(utcoin.balanceOf(msg.sender), expected, "Owner should have 1000000000 UTCoin initially");
   }
 
 }
