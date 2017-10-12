@@ -98,7 +98,7 @@ controller.on(['reaction_added'], (bot, message) => {
   controller.storage.users.get(message.item_user, (err, user) => {
     if (!user) {
       bot.reply(message, "I can't find target address. Please register it. -> `set my address to 0x...`");
-    } else {
+    } else if (message.user != message.item_user) { // Ignore when self reaction
       let to_address = user.address;
 
       // Get balance of `deposit_address`
