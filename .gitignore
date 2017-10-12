@@ -4,3 +4,7 @@ build
 node_modules
 yarn-error.log
 data
+
+### Slack bot ###
+app/slack/storage
+app/slack/config.js
