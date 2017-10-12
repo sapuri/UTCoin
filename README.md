@@ -8,3 +8,13 @@ Address: 0x9bab3c293ca109de331069addced28380c5cc6fc
 
 You can see token information at Etherscan.
 https://ropsten.etherscan.io/token/0x9bab3c293ca109de331069addced28380c5cc6fc
+
+## Slackbot
+Slack plugin for tipping each other with UTCoin.
+
+Inspired by [OKIMOCHI](https://github.com/campfire-inc/OKIMOCHI) (&copy; CAMPFIRE).
+
+### How to use
+```
+token=[slackbot token] node app/slack/bot.js
+```
