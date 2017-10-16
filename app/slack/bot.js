@@ -46,8 +46,8 @@ controller.hears('set my address to (.*)', ['direct_message', 'direct_mention'],
   });
 });
 
-// Tell user's address
-controller.hears('Tell me my address', ['direct_message', 'direct_mention'], (bot, message) => {
+// Get user's address
+controller.hears('my address', ['direct_message', 'direct_mention'], (bot, message) => {
   controller.storage.users.get(message.user, (err, user) => {
     if (!user) {
       bot.reply(message, "I can't find your address. Please register it. -> `set my address to 0x...`");
@@ -58,7 +58,7 @@ controller.hears('Tell me my address', ['direct_message', 'direct_mention'], (bo
 });
 
 // Get my balance
-controller.hears('Tell me my balance', ['direct_message', 'direct_mention'], (bot, message) => {
+controller.hears('my balance', ['direct_message', 'direct_mention'], (bot, message) => {
   controller.storage.users.get(message.user, (err, user) => {
     if (!user) {
       bot.reply(message, "I can't find your address. Please register it. -> `set my address to 0x...`");
@@ -79,7 +79,7 @@ controller.hears('Tell me my balance', ['direct_message', 'direct_mention'], (bo
 });
 
 // Get deposit balance
-controller.hears('Tell me deposit balance', ['direct_message', 'direct_mention'], (bot, message) => {
+controller.hears('deposit balance', ['direct_message', 'direct_mention'], (bot, message) => {
   UTCoin.deployed().then(instance => {
     return instance.balanceOf.call(deposit_address);
   })
