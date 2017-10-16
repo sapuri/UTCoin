@@ -4,25 +4,26 @@ Slack plugin for tipping each other with UTCoin.
 Inspired by [OKIMOCHI](https://github.com/campfire-inc/OKIMOCHI) (&copy; CAMPFIRE).
 
 ## Setup
-### 1. ソースコードをダウンロード
+### 1. Download source code
 ```
 git clone https://github.com/m1nam1/UTCoin.git
 ```
 
-### 2. パッケージをインストール
+### 2. Install packages
 ```
 cd UTCoin
 yarn # or npm install
 ```
 
-### 3. UTCoin をデプロイ
+### 3. Deploy UTCoin
+Ropsten にデプロイする場合
 ```
-truffle migrate
+truffle migrate --network ropsten
 ```
 
 既にデプロイされた UTCoin を使う場合は、上のコマンドを実行する代わりに、その migrate 時に生成された `build` ディレクトリを使用してください。
 
-### 4. app/slack/config.js を作成
+### 4. Create app/slack/config.js
 ```
 cd app/slack
 vi config.js
@@ -35,8 +36,7 @@ exports.deposit_address = '0x...'; // Ropsten
 
 `0x...` の部分はデポジットとして使いたいアドレスを入力します。
 
-### 5. Slackbot 起動
-
+### 5. Run Slackbot
 あらかじめ Slack で bot のトークンを取得しておいてください。
 ```
 token=[slackbot token] node bot.js
