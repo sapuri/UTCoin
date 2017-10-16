@@ -14,7 +14,4 @@ Slack plugin for tipping each other with UTCoin.
 
 Inspired by [OKIMOCHI](https://github.com/campfire-inc/OKIMOCHI) (&copy; CAMPFIRE).
 
-### How to use
-```
-token=[slackbot token] node app/slack/bot.js
-```
+For details, please read [HERE](https://github.com/m1nam1/UTCoin/blob/master/app/slack/README.md).
