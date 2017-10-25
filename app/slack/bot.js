@@ -98,8 +98,8 @@ controller.hears('deposit balance', ['direct_message', 'direct_mention'], (bot, 
 controller.on(['reaction_added'], (bot, message) => {
   // Get `to_address`
   controller.storage.users.get(message.item_user, (err, user) => {
-    if (!user) {
-      bot.reply(message, "I can't find target address. Please register it. -> `set my address to 0x...`");
+    if (!user) { // Ignore if target address is not set
+      console.log('target address not found');
     } else if (message.user != message.item_user) { // Ignore when self reaction
       let to_address = user.address;
 
