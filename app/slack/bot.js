@@ -7,7 +7,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 UTCoin.setProvider(web3.currentProvider);
 
 // Param settings
-const { deposit_address } = require('./config.js');
+const { utcoin_address, deposit_address } = require('./config.js');
 const tip_amount = 10; // 10 UTC
 
 if (!process.env.token) {
@@ -64,7 +64,7 @@ controller.hears('my balance', ['direct_message', 'direct_mention'], (bot, messa
       bot.reply(message, "I can't find your address. Please register it. -> `set my address to 0x...`");
     } else {
       // Get my balance
-      UTCoin.deployed().then(instance => {
+      UTCoin.at(utcoin_address).then(instance => {
         return instance.balanceOf.call(user.address);
       })
         .then(value => {
@@ -80,7 +80,7 @@ controller.hears('my balance', ['direct_message', 'direct_mention'], (bot, messa
 
 // Get deposit balance
 controller.hears('deposit balance', ['direct_message', 'direct_mention'], (bot, message) => {
-  UTCoin.deployed().then(instance => {
+  UTCoin.at(utcoin_address).then(instance => {
     return instance.balanceOf.call(deposit_address);
   })
     .then(value => {
@@ -102,7 +102,7 @@ controller.on(['reaction_added'], (bot, message) => {
       let to_address = user.address;
 
       // Get balance of `deposit_address`
-      UTCoin.deployed().then(instance => {
+      UTCoin.at(utcoin_address).then(instance => {
         return instance.balanceOf.call(deposit_address);
       })
         .then(value => {
@@ -113,7 +113,7 @@ controller.on(['reaction_added'], (bot, message) => {
           } else {
             // Send UTCoin from `deposit_address` to `to_address`
             console.log(`Transfer ${tip_amount} UTC from ${deposit_address} to ${to_address}.`);
-            UTCoin.deployed()
+            UTCoin.at(utcoin_address)
               .then(instance => {
                 return instance.transfer(to_address, tip_amount, {from: deposit_address});
               })
