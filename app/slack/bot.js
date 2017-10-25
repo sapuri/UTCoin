@@ -8,7 +8,9 @@ UTCoin.setProvider(web3.currentProvider);
 
 // Param settings
 const { utcoin_address, deposit_address } = require('./config.js');
-const tip_amount = 10; // 10 UTC
+const decimals = 3; // 小数点
+const num_suffix = Math.pow(10, decimals); // 小数点以下
+const tip_amount = 10 * num_suffix // 10 UTC
 
 if (!process.env.token) {
   console.log('Error: Specify token in environment');
@@ -68,8 +70,8 @@ controller.hears('my balance', ['direct_message', 'direct_mention'], (bot, messa
         return instance.balanceOf.call(user.address);
       })
         .then(value => {
-          const balance = value.valueOf();
-          bot.reply(message, `Your balance is ${balance} UTC.`);
+          const balance_fixed = value.div(num_suffix).toFixed(decimals); // string
+          bot.reply(message, `Your balance is ${balance_fixed} UTC.`);
         })
         .catch(e => {
           console.log(e);
@@ -84,8 +86,8 @@ controller.hears('deposit balance', ['direct_message', 'direct_mention'], (bot, 
     return instance.balanceOf.call(deposit_address);
   })
     .then(value => {
-      const balance = value.valueOf();
-      bot.reply(message, `Deposit balance is ${balance} UTC.`);
+      const balance_fixed = value.div(num_suffix).toFixed(decimals); // string
+      bot.reply(message, `Deposit balance is ${balance_fixed} UTC.`);
     })
     .catch(e => {
       console.log(e);
@@ -106,13 +108,14 @@ controller.on(['reaction_added'], (bot, message) => {
         return instance.balanceOf.call(deposit_address);
       })
         .then(value => {
-          const deposit_balance = value.valueOf();
-          console.log(`Deposit balance: ${deposit_balance} UTC`);
+          const deposit_balance = value.toNumber(); // int
+          const deposit_balance_fixed = value.div(num_suffix).toFixed(decimals); // string
+          console.log(`Deposit balance: ${deposit_balance_fixed} UTC`);
           if (deposit_balance < tip_amount) {
             bot.reply(message, 'The deposit balance is insufficient!');
           } else {
             // Send UTCoin from `deposit_address` to `to_address`
-            console.log(`Transfer ${tip_amount} UTC from ${deposit_address} to ${to_address}.`);
+            console.log(`Transfer ${tip_amount / num_suffix} UTC from ${deposit_address} to ${to_address}.`);
             UTCoin.at(utcoin_address)
               .then(instance => {
                 return instance.transfer(to_address, tip_amount, {from: deposit_address});
