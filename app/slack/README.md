@@ -31,10 +31,10 @@ vi config.js
 
 以下の内容で保存
 ```
-exports.deposit_address = '0x...'; // Ropsten
+// Ropsten
+exports.utcoin_address = '0x...'; // デプロイされた UTCoin のアドレス
+exports.deposit_address = '0x...'; // デポジットとして使いたいアドレス
 ```
-
-`0x...` の部分はデポジットとして使いたいアドレスを入力します。
 
 ### 5. Run Slackbot
 あらかじめ Slack で bot のトークンを取得しておいてください。
