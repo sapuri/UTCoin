@@ -134,3 +134,60 @@ controller.on(['reaction_added'], (bot, message) => {
     }
   });
 });
+
+// Send UTCoin
+controller.hears('send ([0-9]+[\.]?[0-9]*) UTC to (.*)', 'direct_message', (bot, message) => {
+  bot.botkit.log('cmd:', message.text);
+  const amount = message.match[1] * num_suffix;
+  const to_user = message.match[2].slice(2, -1); // Remove mention
+  let from_address = '';
+  let to_address = '';
+
+  // Get `from_address`
+  controller.storage.users.get(message.user, (err, user) => {
+    if (!user) {
+      bot.botkit.log.error('address not found');
+      bot.reply(message, 'I cannot find your address. Please register it. -> `set my address to 0x...`');
+    } else {
+      from_address = user.address;
+
+      // Get `to_address`
+      controller.storage.users.get(to_user, (err, user) => {
+        if (!user) {
+          bot.botkit.log.error('target address not found');
+          bot.reply(message, 'I cannot find target address. It seems that it is not registered yet.');
+        } else {
+          to_address = user.address;
+
+          // Transaction
+          bot.startConversation(message, (err, convo) => {
+            convo.ask(`OK. I will send *${amount / num_suffix} UTC* to <@${to_user}>.\nIf it is correct, please enter your password. (Your address: \`${from_address}\`)`, (response, convo) => {
+              const password = response.text;
+              if (web3.personal.unlockAccount(from_address, password)) {
+                // Send UTCoin from `from_address` to `to_address`
+                bot.botkit.log(`Transfer ${amount / num_suffix} UTC from ${from_address} to ${to_address}.`);
+                UTCoin.at(utcoin_address)
+                  .then(instance => {
+                    return instance.transfer(to_address, amount, {from: from_address});
+                  })
+                  .then(() => {
+                    bot.botkit.log('Transaction complete!');
+                    convo.say('The transaction has been completed!');
+                    convo.next();
+                  })
+                  .catch(e => {
+                    bot.botkit.log.error(e);
+                    convo.say('The transaction failed. Please contact the administrator.');
+                    convo.next();
+                  });
+              } else {
+                convo.say('Sorry. This password is incorrect.');
+                convo.next();
+              }
+            });
+          });
+        }
+      });
+    }
+  });
+});
