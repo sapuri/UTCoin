@@ -28,6 +28,48 @@ controller.spawn({token: process.env.token}).startRTM(err => {
   }
 });
 
+// Help
+controller.hears('help', ['direct_message', 'direct_mention'], (bot, message) => {
+  help_text = '*Commands*\n' +
+  'The commands are activated by direct message or direct mention.\n\n' +
+
+  '- Help\n' +
+  '```\n' +
+  'help\n' +
+  '```\n\n' +
+
+  '- Ping\n' +
+  '```\n' +
+  'hi # or hello\n' +
+  '```\n\n' +
+
+  '- Register address\n' +
+  '```\n' +
+  'set my address to 0x...\n' +
+  '```\n\n' +
+
+  '- Display address\n' +
+  '```\n' +
+  'my address\n' +
+  '```\n\n' +
+
+  '- Display UTCoin balance\n' +
+  '```\n' +
+  'my balance\n' +
+  '```\n\n' +
+
+  '- Display deposit balance\n' +
+  '```\n' +
+  'deposit balance\n' +
+  '```\n\n' +
+
+  '- Transfer UTCoin (Only direct message)\n' +
+  '```\n' +
+  'send [amount] UTC to @[username]\n' +
+  '```\n';
+  bot.reply(message, help_text);
+});
+
 // Greeting
 controller.hears(['hello', 'hi'], ['direct_message', 'direct_mention'], (bot, message) => {
   bot.reply(message, 'Hello.');
@@ -136,7 +178,7 @@ controller.on(['reaction_added'], (bot, message) => {
 });
 
 // Send UTCoin
-controller.hears('send ([0-9]+[\.]?[0-9]*) UTC to (.*)', 'direct_message', (bot, message) => {
+controller.hears('send ([0-9]+[\.]?[0-9]*) UTC to (.+)', 'direct_message', (bot, message) => {
   bot.botkit.log('cmd:', message.text);
   const amount = message.match[1] * num_suffix;
   const to_user = message.match[2].slice(2, -1); // Remove mention

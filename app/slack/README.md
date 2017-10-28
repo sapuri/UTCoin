@@ -55,6 +55,11 @@ Bot が招待されたチャンネルで reaction が発生すると、reaction 
 ### Commands
 The commands are activated by direct message or direct mention.
 
+- Help
+```
+help
+```
+
 - Ping
 ```
 hi # or hello
