@@ -53,7 +53,7 @@ token=[slackbot token] node bot.js
 Bot が招待されたチャンネルで reaction が発生すると、reaction されたユーザーに一定の UTCoin が送金されます。
 
 ### Commands
-コマンドは direct message か direct mention で発動します。
+The commands are activated by direct message or direct mention.
 
 - Ping
 ```
@@ -80,7 +80,7 @@ my balance
 deposit balance
 ```
 
-- Transfer UTCoin
+- Transfer UTCoin (Only direct message)
 ```
 send [amount] UTC to @[username]
 ```
