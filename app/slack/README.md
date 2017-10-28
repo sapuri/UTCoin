@@ -60,27 +60,27 @@ Bot が招待されたチャンネルで reaction が発生すると、reaction 
 hi # or hello
 ```
 
-- アドレスを登録
+- Register address
 ```
 set my address to 0x...
 ```
 
-- アドレスを確認
+- Display address
 ```
 my address
 ```
 
-- UTCoin の残高を確認
+- Display UTCoin balance
 ```
 my balance
 ```
 
-- デポジットの残高を確認
+- Display deposit balance
 ```
 deposit balance
 ```
 
-- 送金
+- Transfer UTCoin
 ```
 send [amount] UTC to @[username]
 ```
