@@ -30,6 +30,7 @@ controller.spawn({token: process.env.token}).startRTM(err => {
 
 // Help
 controller.hears('help', ['direct_message', 'direct_mention'], (bot, message) => {
+  bot.botkit.log('cmd:', message.text);
   help_text = '*Commands*\n' +
   'The commands are activated by direct message or direct mention.\n\n' +
 
@@ -72,11 +73,13 @@ controller.hears('help', ['direct_message', 'direct_mention'], (bot, message) =>
 
 // Greeting
 controller.hears(['hello', 'hi'], ['direct_message', 'direct_mention'], (bot, message) => {
+  bot.botkit.log('cmd:', message.text);
   bot.reply(message, 'Hello.');
 });
 
 // Store user's address
 controller.hears('set my address to (.*)', ['direct_message', 'direct_mention'], (bot, message) => {
+  bot.botkit.log('cmd:', message.text);
   const address = message.match[1]
   controller.storage.users.get(message.user, (err, user) => {
     if (!user) {
@@ -92,6 +95,7 @@ controller.hears('set my address to (.*)', ['direct_message', 'direct_mention'],
 
 // Get user's address
 controller.hears('my address', ['direct_message', 'direct_mention'], (bot, message) => {
+  bot.botkit.log('cmd:', message.text);
   controller.storage.users.get(message.user, (err, user) => {
     if (!user) {
       bot.reply(message, "I can't find your address. Please register it. -> `set my address to 0x...`");
@@ -103,6 +107,7 @@ controller.hears('my address', ['direct_message', 'direct_mention'], (bot, messa
 
 // Get my balance
 controller.hears('my balance', ['direct_message', 'direct_mention'], (bot, message) => {
+  bot.botkit.log('cmd:', message.text);
   controller.storage.users.get(message.user, (err, user) => {
     if (!user) {
       bot.reply(message, "I can't find your address. Please register it. -> `set my address to 0x...`");
@@ -116,7 +121,7 @@ controller.hears('my balance', ['direct_message', 'direct_mention'], (bot, messa
           bot.reply(message, `Your balance is ${balance_fixed} UTC.`);
         })
         .catch(e => {
-          console.log(e);
+          bot.botkit.log.error(e);
         });
     }
   });
@@ -124,6 +129,7 @@ controller.hears('my balance', ['direct_message', 'direct_mention'], (bot, messa
 
 // Get deposit balance
 controller.hears('deposit balance', ['direct_message', 'direct_mention'], (bot, message) => {
+  bot.botkit.log('cmd:', message.text);
   UTCoin.at(utcoin_address).then(instance => {
     return instance.balanceOf.call(deposit_address);
   })
@@ -132,7 +138,7 @@ controller.hears('deposit balance', ['direct_message', 'direct_mention'], (bot, 
       bot.reply(message, `Deposit balance is ${balance_fixed} UTC.`);
     })
     .catch(e => {
-      console.log(e);
+      bot.botkit.log.error(e);
     });
 });
 
@@ -141,7 +147,7 @@ controller.on(['reaction_added'], (bot, message) => {
   // Get `to_address`
   controller.storage.users.get(message.item_user, (err, user) => {
     if (!user) { // Ignore if target address is not set
-      console.log('target address not found');
+      bot.botkit.log.error('target address not found');
     } else if (message.user != message.item_user) { // Ignore when self reaction
       let to_address = user.address;
 
@@ -152,26 +158,26 @@ controller.on(['reaction_added'], (bot, message) => {
         .then(value => {
           const deposit_balance = value.toNumber(); // int
           const deposit_balance_fixed = value.div(num_suffix).toFixed(decimals); // string
-          console.log(`Deposit balance: ${deposit_balance_fixed} UTC`);
+          bot.botkit.log(`Deposit balance: ${deposit_balance_fixed} UTC`);
           if (deposit_balance < tip_amount) {
             bot.reply(message, 'The deposit balance is insufficient!');
           } else {
             // Send UTCoin from `deposit_address` to `to_address`
-            console.log(`Transfer ${tip_amount / num_suffix} UTC from ${deposit_address} to ${to_address}.`);
+            bot.botkit.log(`Transfer ${tip_amount / num_suffix} UTC from ${deposit_address} to ${to_address}.`);
             UTCoin.at(utcoin_address)
               .then(instance => {
                 return instance.transfer(to_address, tip_amount, {from: deposit_address});
               })
               .then(() => {
-                console.log('Transaction complete!');
+                bot.botkit.log('Transaction complete!');
               })
               .catch(e => {
-                console.log(e);
+                bot.botkit.log.error(e);
               });
           }
         })
         .catch(e => {
-          console.log(e);
+          bot.botkit.log.error(e);
         });
     }
   });
