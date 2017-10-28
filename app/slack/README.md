@@ -79,3 +79,8 @@ my balance
 ```
 deposit balance
 ```
+
+- 送金
+```
+send [amount] UTC to @[username]
+```
