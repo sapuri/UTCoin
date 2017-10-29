@@ -214,6 +214,7 @@ controller.hears('send ([0-9]+[\.]?[0-9]*) UTC to (.+)', 'direct_message', (bot,
               if (web3.personal.unlockAccount(from_address, password)) {
                 // Send UTCoin from `from_address` to `to_address`
                 bot.botkit.log(`Transfer ${amount / num_suffix} UTC from ${from_address} to ${to_address}.`);
+                bot.reply(message, 'Please wait...');
                 UTCoin.at(utcoin_address)
                   .then(instance => {
                     return instance.transfer(to_address, amount, {from: from_address});
