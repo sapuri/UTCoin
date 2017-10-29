@@ -186,10 +186,16 @@ controller.on(['reaction_added'], (bot, message) => {
 // Send UTCoin
 controller.hears('send ([0-9]+[\.]?[0-9]*) UTC to (.+)', 'direct_message', (bot, message) => {
   bot.botkit.log('cmd:', message.text);
-  const amount = message.match[1] * num_suffix;
+  const amount = parseInt(Number(message.match[1]) * num_suffix, 10);
   const to_user = message.match[2].slice(2, -1); // Remove mention
   let from_address = '';
   let to_address = '';
+
+  // Validate amount
+  if (amount <= 0) {
+    bot.reply(message, `This is an invalid amount. The minimum is ${1 / num_suffix} UTC.`);
+    return;
+  }
 
   // Get `from_address`
   controller.storage.users.get(message.user, (err, user) => {
