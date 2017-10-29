@@ -1,4 +1,6 @@
 # UTCoin (東大コイン)
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/m1nam1/UTCoin.svg)](https://greenkeeper.io/)
 Ethereum based Cryptocurrency conforming to ERC20 token standard
 
 We are planning to conduct cryptocurrency operation experiment in the University of Tokyo campus using this token.
