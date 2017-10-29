@@ -194,6 +194,7 @@ controller.hears('send ([0-9]+[\.]?[0-9]*) UTC to (.+)', 'direct_message', (bot,
 
   // Validate amount
   if (amount <= 0) {
+    bot.botkit.log.error('invalid amount');
     bot.reply(message, `This is an invalid amount. The minimum is ${1 / num_suffix} UTC.`);
     return;
   }
