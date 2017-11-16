@@ -144,6 +144,8 @@ controller.hears('deposit balance', ['direct_message', 'direct_mention'], (bot, 
 
 // Tip by reaction
 controller.on(['reaction_added'], (bot, message) => {
+  bot.botkit.log('reaction added');
+
   // Get `to_address`
   controller.storage.users.get(message.item_user, (err, user) => {
     if (!user) { // Ignore if target address is not set
