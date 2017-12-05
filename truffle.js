@@ -13,5 +13,11 @@ module.exports = {
       gas: 4000000,
       from: '0xa8b56F0940b69e87a3b856f6416439AEc022C220'
     }
+  },
+  solc: {
+    optimizer: {
+      enabled: true,
+      runs: 200
+    }
   }
 }
