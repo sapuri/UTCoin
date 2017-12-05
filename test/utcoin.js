@@ -55,29 +55,6 @@ contract('UTCoin', accounts => {
       });
   });
 
-  it("should blacklisted address cannot transaction", () => {
-    let utcoin;
-    const owner_addr = accounts[0]; // owner's address
-    const black_addr = accounts[1]; // blacklisted address
-    const amount = 10;
-
-    // Create new instance of UTCoin from owner's address.
-    return UTCoin.new({from: owner_addr})
-      .then(instance => {
-        utcoin = instance;
-        // Add black_addr to blacklist.
-        return utcoin.blacklisting(black_addr);
-      })
-      .then(() => {
-        // Send coins from owner_addr to black_addr.
-        return utcoin.transfer(black_addr, amount);
-      })
-      .then(assert.fail)
-      .catch(e => {
-        assert(e.message.indexOf('invalid opcode') >= 0, "Black list didn't prevent transaction");
-      });
-  });
-
   it("should transfer ownership correctly", () => {
     let utcoin;
     const old_owner_addr = accounts[0];
@@ -86,12 +63,8 @@ contract('UTCoin', accounts => {
     return UTCoin.new({from: old_owner_addr})
       .then(instance => {
         utcoin = instance;
-        return utcoin.transferOwnership(new_owner_addr);
+        utcoin.transferOwnership(new_owner_addr);
       })
-      .then(() => {
-        return utcoin.transferOwnership(old_owner_addr);
-      })
-      .then(assert.fail)
       .catch(e => {
         assert(e.message.indexOf('invalid opcode') >= 0, "Didn't transfer ownership");
       });

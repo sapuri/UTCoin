@@ -1,4 +1,4 @@
-pragma solidity ^0.4.2;
+pragma solidity ^0.4.18;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
@@ -6,7 +6,7 @@ import "../contracts/UTCoin.sol";
 
 contract TestUTCoin {
 
-  function testInitialBalanceUsingDeployedContract() {
+  function testInitialBalanceUsingDeployedContract() public {
     UTCoin utcoin = UTCoin(DeployedAddresses.UTCoin());
 
     uint expected = 1000000000;
