@@ -5,17 +5,12 @@
 
 Ethereum based Cryptocurrency conforming to ERC20 token standard
 
-We are planning to conduct cryptocurrency operation experiment in the University of Tokyo campus using this token.
+"UT" means the University of Tokyo.
+
+I'm planning to conduct cryptocurrency operation experiment in the University of Tokyo campus using this token.
 
 ## Available at Ropsten Testnet
-Address: 0x9bab3c293ca109de331069addced28380c5cc6fc
+Address: 0x7a58dc29bd83745656fe4dda96f0ed7192d35bf4
 
 You can see token information at Etherscan.
-https://ropsten.etherscan.io/token/0x9bab3c293ca109de331069addced28380c5cc6fc
-
-## Slackbot
-Slack plugin for tipping each other with UTCoin.
-
-Inspired by [OKIMOCHI](https://github.com/campfire-inc/OKIMOCHI) (&copy; CAMPFIRE).
-
-For details, please read [HERE](https://github.com/m1nam1/UTCoin/blob/master/app/slack/README.md).
+https://ropsten.etherscan.io/token/0x7a58dc29bd83745656fe4dda96f0ed7192d35bf4
