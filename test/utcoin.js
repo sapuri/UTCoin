@@ -63,12 +63,8 @@ contract('UTCoin', accounts => {
     return UTCoin.new({from: old_owner_addr})
       .then(instance => {
         utcoin = instance;
-        return utcoin.transferOwnership(new_owner_addr);
+        utcoin.transferOwnership(new_owner_addr);
       })
-      .then(() => {
-        return utcoin.transferOwnership(old_owner_addr);
-      })
-      .then(assert.fail)
       .catch(e => {
         assert(e.message.indexOf('invalid opcode') >= 0, "Didn't transfer ownership");
       });
