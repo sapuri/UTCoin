@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Ethereum based cryptocurrency conforming to ERC20 token standard",
   "repository": "https://github.com/m1nam1/UTCoin",
-  "author": "m1nam1",
+  "author": "m1nam1 <info@minami.xyz>",
   "license": "MIT",
   "dependencies": {
     "zeppelin-solidity": "^1.4.0"
