@@ -2,8 +2,8 @@ let UTCoin = artifacts.require("./UTCoin.sol");
 
 contract('UTCoin', accounts => {
 
-  const totalSupply = 1000000000;
-  it(`should put ${totalSupply} UTCoin in the first account`, () => {
+  const totalSupply = 1000000000; // 1,000,000 UTC
+  it(`should put ${totalSupply} UTC in the first account`, () => {
     return UTCoin.deployed().then(instance => {
       return instance.balanceOf.call(accounts[0]);
     }).then(balance => {

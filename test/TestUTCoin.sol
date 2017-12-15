@@ -11,7 +11,7 @@ contract TestUTCoin {
 
     uint expected = 1000000000;
 
-    Assert.equal(utcoin.balanceOf(msg.sender), expected, "Owner should have 1000000000 UTCoin initially");
+    Assert.equal(utcoin.balanceOf(msg.sender), expected, "Owner should have 1000000000 UTC initially");
   }
 
 }
