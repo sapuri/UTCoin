@@ -6,6 +6,12 @@ module.exports = {
       network_id: '*', // Match any network id
       gas: 4000000
     },
+    truffle: {
+      host: 'localhost',
+      port: 9545,
+      network_id: '4447', // truffle develop
+      gas: 4000000
+    },
     ropsten: {
       host: 'localhost',
       port: 8545,
