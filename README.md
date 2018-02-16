@@ -10,7 +10,7 @@ Ethereum based Cryptocurrency conforming to ERC20 token standard
 I'm planning to conduct cryptocurrency operation experiment in the University of Tokyo campus using this token.
 
 ## Available at Ropsten Testnet
-Address: 0x7a58dc29bd83745656fe4dda96f0ed7192d35bf4
+Address: 0xb899ca31b7008c16e7779d399dc1c42c2bae75fc
 
 You can see token information at Etherscan.
-https://ropsten.etherscan.io/token/0x7a58dc29bd83745656fe4dda96f0ed7192d35bf4
+https://ropsten.etherscan.io/token/0xb899ca31b7008c16e7779d399dc1c42c2bae75fc
