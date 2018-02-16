@@ -7,7 +7,7 @@ contract UTCoin is MintableToken {
     string public constant symbol = "UTC";
     uint256 public constant decimals = 3;
 
-    uint256 public constant initialSupply = 1000000 * (10 ** uint256(decimals)); // 1,000,000 UTC
+    uint256 public constant initialSupply = 100000000 * (10 ** uint256(decimals)); // 100,000,000 UTC
 
     function UTCoin() public {
         totalSupply = initialSupply;
